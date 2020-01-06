@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/bootstrap::head">
+</head>
+<body>
+<div class="container">
+    <div th:replace="fragments/menu::top"></div>
+    <h1>Room Booking System</h1>
+
+    <form action="/calendar" method="get" th:object="${dateRequest}">
+        <h2>The following meetings are taking place on: <input type="date" th:field="*{date}" onchange="this.form.submit();" /></h2>
+    </form>
+
+
+    <a href="/bookings/new" class="btn btn-primary mt-3 mb-5">New Booking</a>
+
+    <h3 class="mt-5" th:if="${bookings.size() == 0}">There are no meetings currently scheduled for this date.</h3>
+
+    <div class="row row-striped" th:each="booking : ${bookings}">
+        <div class="col-2 text-right">
+            <h1 class="display-4"><span class="badge badge-secondary" th:text="${booking.displayDay}">dd</span></h1>
+            <h2 th:text="${booking.displayMonth}">MMM</h2>
+        </div>
+        <div class="col-10">
+            <h3 class="text-uppercase"><strong><span th:text="${booking.title}">title</span></strong></h3>
+            <ul class="list-inline">
+                <li class="list-inline-item"><i class="fa fa-calendar-o" aria-hidden="true"></i><span th:text="${booking.displayDayOfWeek}">xxxday</span> </li>
+                <li class="list-inline-item"><i class="fa fa-clock-o" aria-hidden="true"></i><span th:text="|${booking.startTime} - ${booking.endTime}|"></span></li>
+                <li class="list-inline-item"><i class="fa fa-location-arrow" aria-hidden="true"></i><span th:text="${booking.room.name}">room</span></li>
+            </ul>
+            <div class="row">
+                <div class="col-6">
+                    <p class="mb-0">Booked by : <span th:text="${booking.user.name}">user</span></p>
+                    <p class="mb-0">Room layout: <span th:text="${booking.layout.description}">layout</span></p>
+                    <p>Participants: <span th:text="${booking.participants}">participants</span></p>
+                </div>
+                <div class="col-6">
+                    <a th:href="@{/bookings/edit(id=${booking.id})}" class="btn btn-warning">Amend</a>
+                    <a th:href="@{/bookings/delete(id=${booking.id})}" class="btn btn-danger">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <p class="mt-5">The design of this page is taken from <a href="https://bootsnipp.com/snippets/VgzeR">https://bootsnipp.com/snippets/VgzeR</a></p>
+</div>
+</body>
+</html>
