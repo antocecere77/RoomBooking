@@ -1,11 +1,13 @@
 package com.virtualpairprogrammers.roombooking.rest;
 
 import com.virtualpairprogrammers.roombooking.data.UserRepository;
+import com.virtualpairprogrammers.roombooking.model.AngularUser;
 import com.virtualpairprogrammers.roombooking.model.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/users")
@@ -15,24 +17,27 @@ public class RestUsersController {
     private UserRepository userRepository;
 
     @GetMapping
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<AngularUser> getAllUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(user -> new AngularUser(user))
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
-    public User getUser(@PathVariable("id") Long id) {
-        return userRepository.findById(id).get();
+    public AngularUser getUser(@PathVariable("id") Long id) {
+        return new AngularUser(userRepository.findById(id).get());
     }
 
     @PutMapping
-    public User updateUser(User updatedUser) {
+    public AngularUser updateUser(@RequestBody AngularUser updatedUser) {
         User originalUser = userRepository.findById(updatedUser.getId()).get();
         originalUser.setName(updatedUser.getName());
-        return userRepository.save(originalUser);
+        return new AngularUser(userRepository.save(originalUser));
     }
 
     @PostMapping
-    public User newUser(User user) {
-        return userRepository.save(user);
+    public AngularUser newUser(@RequestBody AngularUser user) {
+        return new AngularUser(userRepository.save(user.asUser()));
     }
 }
