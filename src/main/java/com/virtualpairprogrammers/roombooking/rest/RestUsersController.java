@@ -42,7 +42,14 @@ public class RestUsersController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable("id") Long id ){
+    public void deleteUser(@PathVariable("id") Long id){
         userRepository.deleteById(id);
+    }
+
+    @GetMapping("/resetPassword/{id}")
+    public void resetPassword(@PathVariable("id") Long id) {
+        User user = userRepository.findById(id).get();
+        user.setPassword("secret");
+        userRepository.save(user);
     }
 }
