@@ -20,4 +20,9 @@ public class RestBookingController {
         Date sqlDate = Date.valueOf(date);
         return bookingRepository.findAllByDate(sqlDate);
     }
+
+    @DeleteMapping("/{id}")
+    public void deleteBooking(@PathVariable("id") Long id) {
+        bookingRepository.deleteById(id);
+    }
 }
