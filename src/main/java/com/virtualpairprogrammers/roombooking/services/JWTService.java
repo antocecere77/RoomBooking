@@ -10,6 +10,7 @@ import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.util.Base64;
 import java.util.Date;
 
 @Service
@@ -34,5 +35,14 @@ public class JWTService {
                 .withClaim("role", role)
                 .withExpiresAt(new Date(System.currentTimeMillis() + expirationTime))
                 .sign(Algorithm.RSA256(publicKey, privateKey));
+    }
+
+    public String validateToken(String token) {
+        String encodedPayload = JWT.require(Algorithm.RSA256(publicKey, privateKey))
+                .build()
+                .verify(token)
+                .getPayload();
+
+        return new String(Base64.getDecoder().decode(encodedPayload));
     }
 }
