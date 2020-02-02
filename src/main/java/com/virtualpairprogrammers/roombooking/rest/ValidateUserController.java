@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import sun.plugin.liveconnect.SecurityContextHelper;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +22,7 @@ public class ValidateUserController {
     JWTService jwtService;
 
     @RequestMapping("validate")
-    public Map<String, String> userIsValid() {
+    public Map<String, String> userIsValid(HttpServletResponse response) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User)auth.getPrincipal();
         String name = currentUser.getUsername();
@@ -29,6 +31,9 @@ public class ValidateUserController {
         String token = jwtService.generateToken(name, role);
         Map<String, String> results = new HashMap<>();
         results.put("result", token);
+
+        Cookie cookie = new Cookie("token", token);
+        response.addCookie(cookie);
         return  results;
     }
 
