@@ -11,7 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 
 @Configuration
 @EnableWebSecurity
-public class BasicAuthConfig extends WebSecurityConfigurerAdapter {
+public class RestSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
@@ -28,7 +28,12 @@ public class BasicAuthConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS, "/api/basicAuth/**").permitAll()
                 .antMatchers("/api/basicAuth/**")
-                .hasRole("ADMIN")
+                .hasAnyRole("ADMIN", "USER")
                 .and().httpBasic();
+
+        http.csrf().disable()
+                .authorizeRequests().antMatchers("/api/users/**").hasRole("ADMIN")
+                .and()
+                .addFilter(new JWTAuthorizationFilter(authenticationManager()));
     }
 }
