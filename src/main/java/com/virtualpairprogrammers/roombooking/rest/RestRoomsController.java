@@ -2,6 +2,7 @@ package com.virtualpairprogrammers.roombooking.rest;
 
 import com.virtualpairprogrammers.roombooking.data.RoomRepository;
 import com.virtualpairprogrammers.roombooking.model.entities.Room;
+import netscape.javascript.JSUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +16,8 @@ public class RestRoomsController {
     private RoomRepository roomRepository;
 
     @GetMapping
-    public List<Room> getAllRooms() {
+    public List<Room> getAllRooms(@CookieValue(value="token", defaultValue = "empty") String token) {
+        System.out.println("token received by cookie is " + token);
         return roomRepository.findAll();
     }
 
