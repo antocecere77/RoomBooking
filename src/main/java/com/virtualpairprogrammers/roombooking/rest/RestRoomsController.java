@@ -17,7 +17,6 @@ public class RestRoomsController {
 
     @GetMapping
     public List<Room> getAllRooms(@CookieValue(value="token", defaultValue = "empty") String token) {
-        System.out.println("token received by cookie is " + token);
         return roomRepository.findAll();
     }
 
