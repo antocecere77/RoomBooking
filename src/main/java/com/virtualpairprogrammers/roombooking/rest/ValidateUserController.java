@@ -34,6 +34,9 @@ public class ValidateUserController {
 
         Cookie cookie = new Cookie("token", token);
         cookie.setPath("/api");
+        cookie.setHttpOnly(true);
+        //TODO: when in production must do: cookie.setSecure(true);
+        cookie.setMaxAge(1800);
         response.addCookie(cookie);
         return  results;
     }
