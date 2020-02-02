@@ -1,6 +1,7 @@
 package com.virtualpairprogrammers.roombooking.config;
 
 import com.virtualpairprogrammers.roombooking.services.JWTService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.JsonParser;
 import org.springframework.boot.json.JsonParserFactory;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -40,7 +41,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
         if(jwtService==null) {
             ServletContext servletContext = request.getServletContext();
             WebApplicationContext wac = WebApplicationContextUtils.getWebApplicationContext(servletContext);
-            wac.getBean(JWTService.class);
+            jwtService = wac.getBean(JWTService.class);
         }
 
         UsernamePasswordAuthenticationToken authentication = getAuthentication(header);
