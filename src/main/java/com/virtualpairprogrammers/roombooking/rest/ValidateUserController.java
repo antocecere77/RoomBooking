@@ -33,6 +33,7 @@ public class ValidateUserController {
         results.put("result", token);
 
         Cookie cookie = new Cookie("token", token);
+        cookie.setPath("/api");
         response.addCookie(cookie);
         return  results;
     }
