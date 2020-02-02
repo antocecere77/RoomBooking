@@ -4,9 +4,14 @@ import com.virtualpairprogrammers.roombooking.data.UserRepository;
 import com.virtualpairprogrammers.roombooking.model.AngularUser;
 import com.virtualpairprogrammers.roombooking.model.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -51,5 +56,18 @@ public class RestUsersController {
         User user = userRepository.findById(id).get();
         user.setPassword("secret");
         userRepository.save(user);
+    }
+
+    @GetMapping("/currentUserRole")
+    public Map<String, String> getCurrentUsersRole() {
+        Collection<GrantedAuthority> roles = (Collection<GrantedAuthority>) SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+        String role = "";
+        if(roles.size() > 0) {
+            GrantedAuthority ga = roles.iterator().next();
+            role = ga.getAuthority().substring(5);
+        }
+        Map<String, String> result = new HashMap<>();
+        result.put("role", role);
+        return result;
     }
 }
